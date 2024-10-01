@@ -7,25 +7,23 @@ import { useRouter } from "next/navigation";
 import { Button, Form } from "react-bootstrap";
 import { FaCheck } from "react-icons/fa";
 import { MdOutlineArrowBack } from "react-icons/md";
-import { v4 } from "uuid";
 
 export default function Page() {
 
     const route = useRouter()
 
     function salvar(dados){
-        const empresas = JSON.parse(localStorage.getItem('empresas')) || []
-        dados.id = v4()
-        empresas.push(dados)
-        localStorage.setItem('empresas', JSON.stringify(empresas))
-        return route.push('/empresas')
+        const aeroporto = JSON.parse(localStorage.getItem('aeroporto')) || []
+        aeroporto.push(dados)
+        localStorage.setItem('aeroporto', JSON.stringify(aeroporto))
+        return route.push('/aeroporto')
     }
 
     return (
-        <Pagina titulo="Empresa">
+        <Pagina titulo="Aeroporto">
 
             <Formik
-                initialValues={{nome: '', logo: '', site: ''}}
+                initialValues={{nome: '', sigla: '', uf: '', cidade:'', pais:''}}
                 onSubmit={values=>salvar(values)}
             >
                 {({
