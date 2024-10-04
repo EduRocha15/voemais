@@ -17,11 +17,17 @@ export default function Page({params}) {
 
     const empresas = JSON.parse(localStorage.getItem('empresas')) || []
     const dados = empresas.find(item=>item.id == params.id)
-    const empresa = dados || {nome: '', logo: '', site: ''}
+    const empresa = dados || {nome: '', logo: '', site: '', cnpj: ''}
 
     function salvar(dados){
 
-        Object.assign(empresa, dados)
+        if(empresa.id){
+            Object.assign(empresa, dados)
+        } else {
+            dados.id = v4()
+            empresas.push(dados)
+        }
+
         localStorage.setItem('empresas', JSON.stringify(empresas))
         return route.push('/empresas')
     }
@@ -64,6 +70,15 @@ export default function Page({params}) {
                                 name="site"
                                 value={values.site}
                                 onChange={handleChange('site')}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="cnpj">
+                            <Form.Label>CNPJ</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="cnpj"
+                                value={values.cnpj}
+                                onChange={handleChange('cnpj')}
                             />
                         </Form.Group>
                         <div className="text-center">
