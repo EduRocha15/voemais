@@ -7,20 +7,22 @@ import { useRouter } from "next/navigation";
 import { Button, Form } from "react-bootstrap";
 import { FaCheck } from "react-icons/fa";
 import { MdOutlineArrowBack } from "react-icons/md";
+import { v4 } from "uuid";
 
 export default function Page() {
 
     const route = useRouter()
 
     function salvar(dados){
-        const aeroporto = JSON.parse(localStorage.getItem('aeroporto')) || []
-        aeroporto.push(dados)
-        localStorage.setItem('aeroporto', JSON.stringify(aeroporto))
-        return route.push('/aeroporto')
+        const aeroportos = JSON.parse(localStorage.getItem('aeroportos')) || []
+        dados.id = v4()
+        aeroportos.push(dados)
+        localStorage.setItem('aeroportos', JSON.stringify(aeroportos))
+        return route.push('/aeroportos')
     }
 
     return (
-        <Pagina titulo="Aeroporto">
+        <Pagina titulo="Cadastro dos Aeroportos">
 
             <Formik
                 initialValues={{nome: '', sigla: '', uf: '', cidade:'', pais:''}}
@@ -41,22 +43,40 @@ export default function Page() {
                                 onChange={handleChange('nome')}
                             />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="logo">
-                            <Form.Label>Logo</Form.Label>
+                        <Form.Group className="mb-3" controlId="sigla">
+                            <Form.Label>Sigla</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                name="logo"
-                                value={values.logo}
-                                onChange={handleChange('logo')}
+                                name="sigla"
+                                value={values.sigla}
+                                onChange={handleChange('sigla')}
                             />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="site">
-                            <Form.Label>Site</Form.Label>
+                        <Form.Group className="mb-3" controlId="uf">
+                            <Form.Label>UF</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                name="site"
-                                value={values.site}
-                                onChange={handleChange('site')}
+                                name="uf"
+                                value={values.uf}
+                                onChange={handleChange('uf')}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="cidade">
+                            <Form.Label>Cidade</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="cidade"
+                                value={values.cidade}
+                                onChange={handleChange('cidade')}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="pais">
+                            <Form.Label>País</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="pais"
+                                value={values.pais}
+                                onChange={handleChange('pais')}
                             />
                         </Form.Group>
                         <div className="text-center">
@@ -64,7 +84,7 @@ export default function Page() {
                                 <FaCheck /> Salvar
                             </Button>
                             <Link
-                                href="/empresas"
+                                href="/aeroportos"
                                 className="btn btn-danger ms-2"
                             >
                                 <MdOutlineArrowBack /> Voltar

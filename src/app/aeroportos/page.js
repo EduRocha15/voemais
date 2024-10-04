@@ -12,25 +12,25 @@ import { MdDelete } from "react-icons/md";
 
 export default function Page() {
 
-    const [aeroporto, setAeroporto] = useState([])
+    const [aeroportos, setAeroportos] = useState([])
 
     useEffect(()=>{
-        setAeroporto(JSON.parse(localStorage.getItem('aeroporto')) || [])
+        setAeroportos(JSON.parse(localStorage.getItem('aeroportos')) || [])
     }, [])
 
     function excluir(id) {
         if(confirm("Deseja realmente excluir o registro?")){
-            const dados = aeroporto.filter(item => item.id != id)
-            localStorage.setItem('empresas', JSON.stringify(dados))
-            setAeroporto(dados)
+            const dados = aeroportos.filter(item => item.id != id)
+            localStorage.setItem('aeroportos', JSON.stringify(dados))
+            setAeroportos(dados)
         }
     }
 
     return (
-        <Pagina titulo="Aeroporto">
+        <Pagina titulo="Lista de Aeroportos">
 
             <Link 
-                href="/aeroporto/create" 
+                href="/aeroportos/create" 
                 className="btn btn-primary mb-3"
             >
                 <FaPlusCircle /> Novo
@@ -48,10 +48,10 @@ export default function Page() {
                     </tr>
                 </thead>
                 <tbody>
-                    {empresas.map((item, i) => (
+                    {aeroportos.map((item, i) => (
                         <tr key={item.id}>
                             <td>
-                                <Link href={`/empresas/edit/${item.id}`}>
+                                <Link href={`/aeroportos/form/${item.id}`}>
                                 <FaEdit
                                     className="text-primary"
                                     title="editar"
@@ -64,11 +64,10 @@ export default function Page() {
                                 />
                             </td>
                             <td>{item.nome}</td>
-                            <td>
-                                <a href={item.site}>
-                                    <img src={item.logo} width={60} />
-                                </a>                                
-                            </td>
+                            <td>{item.sigla}</td>
+                            <td>{item.uf}</td>
+                            <td>{item.cidade}</td>
+                            <td>{item.pais}</td>
                         </tr>
                     ))}
                 </tbody>
