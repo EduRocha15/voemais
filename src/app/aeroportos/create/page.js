@@ -22,7 +22,7 @@ export default function Page() {
     }
 
     return (
-        <Pagina titulo="Cadastro dos Aeroportos">
+        <Pagina titulo="Cadastro de Aeroportos">
 
             <Formik
                 initialValues={{nome: '', sigla: '', uf: '', cidade:'', pais:''}}

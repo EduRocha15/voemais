@@ -22,7 +22,7 @@ export default function Page() {
     }
 
     return (
-        <Pagina titulo="Cadastro das Passagens">
+        <Pagina titulo="Cadastro de Passagens">
 
             <Formik
                 initialValues={{voo: '', passageiro: '', assento: '', preco:''}}
