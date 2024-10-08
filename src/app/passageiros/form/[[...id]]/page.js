@@ -35,7 +35,7 @@ export default function Page({params}) {
     }
 
     return (
-        <Pagina titulo="Atualizar dados do passageiro">
+        <Pagina titulo="Passageiro">
 
             <Formik
                 initialValues={passageiro}

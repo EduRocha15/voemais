@@ -13,7 +13,7 @@ import { MdDelete } from "react-icons/md";
 export default function Page() {
 
     const [aeroportos, setAeroportos] = useState([])
-
+    
     useEffect(()=>{
         setAeroportos(JSON.parse(localStorage.getItem('aeroportos')) || [])
     }, [])
@@ -30,7 +30,7 @@ export default function Page() {
         <Pagina titulo="Lista de Aeroportos">
 
             <Link 
-                href="/aeroportos/create" 
+                href="/aeroportos/form" 
                 className="btn btn-primary mb-3"
             >
                 <FaPlusCircle /> Novo
@@ -42,9 +42,9 @@ export default function Page() {
                         <th>#</th>
                         <th>Nome</th>
                         <th>Sigla</th>
+                        <th>País</th>
                         <th>uf</th>
                         <th>Cidade</th>
-                        <th>País</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,10 +64,10 @@ export default function Page() {
                                 />
                             </td>
                             <td>{item.nome}</td>
+                            <td>{item.pais}</td>
                             <td>{item.sigla}</td>
                             <td>{item.uf}</td>
                             <td>{item.cidade}</td>
-                            <td>{item.pais}</td>
                         </tr>
                     ))}
                 </tbody>
