@@ -30,7 +30,7 @@ export default function Page() {
         <Pagina titulo="Lista de Voos">
 
             <Link 
-                href="/voos/create" 
+                href="voos/form" 
                 className="btn btn-primary mb-3"
             >
                 <FaPlusCircle /> Novo

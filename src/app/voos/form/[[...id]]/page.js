@@ -21,6 +21,14 @@ export default function Page({params}) {
     const dados = voos.find(item=>item.id == params.id)
     const voo = dados || {internacional: '', identificador: '', data_checkin: '', data_embarque:'', origem:'', destino:'', empresa:'', preco:''}
 
+    const [empresas, setEmpresas] = useState([])
+    const [aeroportos, setAeroportos] = useState([])
+
+    useEffect(() => {
+        setEmpresas(JSON.parse(localStorage.getItem('empresas')) || []);
+        setAeroportos(JSON.parse(localStorage.getItem('aeroportos')) || [])
+    }, [])
+
     function salvar(dados){
 
         if(voo.id){
@@ -35,7 +43,7 @@ export default function Page({params}) {
     }
 
     return (
-        <Pagina titulo="Passageiro">
+        <Pagina titulo="Voos">
 
             <Formik
                 initialValues={voo}
@@ -58,17 +66,23 @@ export default function Page({params}) {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="identificador">
                             <Form.Label>Identificador</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="identificador"
-                                value={values.identificador}
-                                onChange={handleChange('identificador')}
-                            />
+                            <Form.Select aria-label="Default select example"
+                                    name="identificador"
+                                    value={values.identificador}
+                                    onChange={handleChange('identificador')}
+                                >
+                                    <option>Selecione</option>
+                                    {empresas.map(item => (
+                                        <option key={item.identificador} value={item.identificador}>
+                                            {item.identificador}
+                                        </option>
+                                    ))}
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="data_checkin">
                             <Form.Label>Data de Checkin</Form.Label>
                             <Form.Control 
-                                type="text" 
+                                type="date" 
                                 name="data_checkin"
                                 value={values.data_checkin}
                                 onChange={handleChange('data_checkin')}
@@ -77,7 +91,7 @@ export default function Page({params}) {
                         <Form.Group className="mb-3" controlId="data_embarque">
                             <Form.Label>Data de Embarque</Form.Label>
                             <Form.Control 
-                                type="text" 
+                                type="date" 
                                 name="data_embarque"
                                 value={values.data_embarque}
                                 onChange={handleChange('data_embarque')}
@@ -85,30 +99,48 @@ export default function Page({params}) {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="origem">
                             <Form.Label>Origem</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="origem"
-                                value={values.origem}
-                                onChange={handleChange('origem')}
-                            />
+                            <Form.Select aria-label="Default select example"
+                                    name="origem"
+                                    value={values.origem}
+                                    onChange={handleChange('origem')}
+                                >
+                                    <option>Selecione</option>
+                                    {aeroportos.map(item => (
+                                        <option key={item.nome} value={item.nome}>
+                                            {item.sigla} {item.nome} - {item.uf}, {item.cidade}
+                                        </option>
+                                    ))}
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="destino">
                             <Form.Label>Destino</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="destino"
-                                value={values.destino}
-                                onChange={handleChange('destino')}
-                            />
+                            <Form.Select aria-label="Default select example"
+                                    name="destino"
+                                    value={values.destino}
+                                    onChange={handleChange('destino')}
+                                >
+                                    <option>Selecione</option>
+                                    {aeroportos.map(item => (
+                                        <option key={item.nome} value={item.nome}>
+                                            {item.sigla} {item.nome} - {item.uf}, {item.cidade}
+                                        </option>
+                                    ))}
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="empresa">
                             <Form.Label>Empresa</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="empresa"
-                                value={values.empresa}
-                                onChange={handleChange('empresa')}
-                            />
+                            <Form.Select aria-label="Default select example"
+                                    name="empresa"
+                                    value={values.empresa}
+                                    onChange={handleChange('empresa')}
+                                >
+                                    <option>Selecione</option>
+                                    {empresas.map(item => (
+                                        <option key={item.nome} value={item.nome}>
+                                            {item.nome}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="preco">
                             <Form.Label>Preço</Form.Label>

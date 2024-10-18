@@ -42,6 +42,7 @@ export default function Page() {
                         <th>#</th>
                         <th>Nome</th>
                         <th>Logo</th>
+                        <th>Site</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,6 +67,7 @@ export default function Page() {
                                     <img src={item.logo} width={60} />
                                 </a>                                
                             </td>
+                            <td>{item.site}</td>
                         </tr>
                     ))}
                 </tbody>
