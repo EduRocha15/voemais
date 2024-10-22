@@ -11,7 +11,9 @@ import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { FaCheck } from "react-icons/fa";
 import { MdOutlineArrowBack } from "react-icons/md";
+import { mask, unmask } from "remask";
 import { v4 } from 'uuid';
+
 
 export default function Page({params}) {
 
@@ -45,75 +47,101 @@ export default function Page({params}) {
                     values,
                     handleChange,
                     handleSubmit,
-                }) => (
-                    <Form>
-                        <Form.Group className="mb-3" controlId="nome">
-                            <Form.Label>Nome</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="nome" 
-                                value={values.nome}
-                                onChange={handleChange('nome')}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="tipo_documento">
-                            <Form.Label>Tipo do Documento</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="tipo_documento"
-                                value={values.tipo_documento}
-                                onChange={handleChange('tipo_documento')}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="documento">
-                            <Form.Label>Documento</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="documento"
-                                value={values.documento}
-                                onChange={handleChange('documento')}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="email">
-                            <Form.Label>E-mail</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="email"
-                                value={values.email}
-                                onChange={handleChange('email')}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="telefone">
-                            <Form.Label>Telefone</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="telefone"
-                                value={values.telefone}
-                                onChange={handleChange('telefone')}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="data_nascimento">
-                            <Form.Label>Data de Nascimento</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="data_nascimento"
-                                value={values.data_nascimento}
-                                onChange={handleChange('data_nascimento')}
-                            />
-                        </Form.Group>
-                        <div className="text-center">
-                            <Button onClick={handleSubmit} variant="success">
-                                <FaCheck /> Salvar
-                            </Button>
-                            <Link
-                                href="/passageiros"
-                                className="btn btn-danger ms-2"
-                            >
-                                <MdOutlineArrowBack /> Voltar
-                            </Link>
-                        </div>
-                    </Form>
-                )}
+                    setFieldValue
+                }) => {
+
+                    useEffect(() => {
+                        switch(values.tipo_documento){
+                            case 'CPF':
+                                values.documento = mask(values.documento, '999.999.999-99'); break;
+                            case 'CNPJ':
+                                values.documento = mask(values.documento, '99.999.999/9999-99'); break;
+                            case 'passaporte':
+                                values.documento = mask(values.documento, 'AAA9999'); break;
+                        }
+                    }, [values.documento])
+
+                    useEffect(() => {
+                    values.documento = ''
+                    }, [values.tipo_documento])
+
+                    return (
+                        <Form>
+                            <Form.Group className="mb-3" controlId="nome">
+                                <Form.Label>Nome</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="nome" 
+                                    value={values.nome}
+                                    onChange={handleChange('nome')}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="tipo_documento">
+                                <Form.Label>Tipo do Documento</Form.Label>
+                                <Form.Select aria-label="Default select example"
+                                        name="tipo_documento"
+                                        value={values.tipo_documento}
+                                        onChange={handleChange('tipo_documento')}
+                                    >
+                                        <option value={''}>Selecione</option>
+                                        <option value={'CPF'}>CPF</option>
+                                        <option value={'CNPJ'}>CNPJ</option>
+                                        <option value={'PASSAPORTE'}>PASSAPORTE</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="documento">
+                                <Form.Label>Documento</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="documento"
+                                    value={values.documento}
+                                    onChange={handleChange('documento')}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="email">
+                                <Form.Label>E-mail</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="email"
+                                    value={values.email}
+                                    onChange={handleChange('email')}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="telefone">
+                                <Form.Label>Telefone</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="telefone"
+                                    value={values.telefone}
+                                    onChange={(value)=>{
+                                        setFieldValue("telefone", mask(value.target.value, '(99) 99999-9999'))}}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="data_nascimento">
+                                <Form.Label>Data de Nascimento</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="data_nascimento"
+                                    value={values.data_nascimento}
+                                    onChange={(value)=>{
+                                        setFieldValue('data_nascimento', mask(value.target.value, '99/99/9999'))
+                                    }}
+                                />
+                            </Form.Group>
+                            <div className="text-center">
+                                <Button onClick={handleSubmit} variant="success">
+                                    <FaCheck /> Salvar
+                                </Button>
+                                <Link
+                                    href="/passageiros"
+                                    className="btn btn-danger ms-2"
+                                >
+                                    <MdOutlineArrowBack /> Voltar
+                                </Link>
+                            </div>
+                        </Form>
+                    )
+                }}
             </Formik>
         </Pagina>
     )
