@@ -12,10 +12,10 @@ import {useState} from "react";
 import {Button, Form} from "react-bootstrap";
 import {FaCheck} from "react-icons/fa";
 import {MdOutlineArrowBack} from "react-icons/md";
+import { currency } from "remask";
 import {v4} from 'uuid';
 
 export default function Page({params}) {
-
     const route = useRouter()
 
     const passagens = JSON.parse(localStorage.getItem('passagens')) || []
@@ -41,6 +41,7 @@ export default function Page({params}) {
     }
 
     return (
+
         <Pagina titulo="Passagem">
 
             <Formik
@@ -48,7 +49,12 @@ export default function Page({params}) {
                 onSubmit={values => salvar(values)}
                 validationSchema={PassagemValidator}>
                 {
-                    ({values, handleChange, handleSubmit, errors}) => {
+                    ({values, handleChange, handleSubmit, errors, setFieldValue}) => {
+
+                        useEffect(() => {
+                            currency.mask({ locale: 'pt-BR', currency: 'BRL', })
+                          }, [values.preco]);
+
                         return (
                             <Form>
                                 <Form.Group className="mb-3" controlId="voo">

@@ -6,15 +6,14 @@ import Pagina from "@/components/Pagina";
 import PassageiroValidator from "@/validator/PassageiroValidator";
 import {Formik} from "formik";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { FaCheck } from "react-icons/fa";
-import { MdOutlineArrowBack } from "react-icons/md";
-import { mask, unmask } from "remask";
-import { v4 } from 'uuid';
-
+import {useRouter} from "next/navigation";
+import {useEffect} from "react";
+import {useState} from "react";
+import {Button, Form} from "react-bootstrap";
+import {FaCheck} from "react-icons/fa";
+import {MdOutlineArrowBack} from "react-icons/md";
+import { mask } from "remask";
+import {v4} from 'uuid';
 
 export default function Page({params}) {
 
@@ -49,44 +48,55 @@ export default function Page({params}) {
 
             <Formik
                 initialValues={passageiro}
-                onSubmit={values=>salvar(values)}
-            >
-                {({
-                    values,
-                    handleChange,
-                    handleSubmit,
-                    setFieldValue
-                }) => {
+                onSubmit={values => salvar(values)}
+                validationSchema={PassageiroValidator}>
+                {
+                    ({
+                        values,
+                        errors,
+                        handleChange,
+                        handleSubmit,
+                        setFieldValue
+                    }) => {
+    
+                        useEffect(()=>{
+                            switch(values.tipo_documento){
+                                case 'CPF': 
+                                    values.documento = mask(values.documento, '999.999.999-99'); 
+                                    break;
+                                case 'CNPJ': 
+                                    values.documento = mask(values.documento, '99.999.999/9999-99'); 
+                                    break;
+                                case 'RG': 
+                                    values.documento = mask(values.documento, '9.999.999'); 
+                                    break;
+                                case 'Passaporte': 
+                                    values.documento = mask(values.documento, 'AAA9999'); 
+                                    break;
+                            }
+                        }, [values.documento])
+    
+                        useEffect(() => {
+                        values.documento = ''
+                        }, [values.tipo_documento])
 
-                    useEffect(() => {
-                        switch(values.tipo_documento){
-                            case 'CPF':
-                                values.documento = mask(values.documento, '999.999.999-99'); break;
-                            case 'CNPJ':
-                                values.documento = mask(values.documento, '99.999.999/9999-99'); break;
-                            case 'passaporte':
-                                values.documento = mask(values.documento, 'AAA9999'); break;
-                        }
-                    }, [values.documento])
-
-                    useEffect(() => {
-                    values.documento = ''
-                    }, [values.tipo_documento])
-
-                    return (
-                        <Form>
-                            <Form.Group className="mb-3" controlId="nome">
-                                <Form.Label>Nome</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="nome" 
-                                    value={values.nome}
-                                    onChange={handleChange('nome')}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="tipo_documento">
-                                <Form.Label>Tipo do Documento</Form.Label>
-                                <Form.Select aria-label="Default select example"
+                        return (
+                            <Form>
+                                <Form.Group className="mb-3" controlId="nome">
+                                    <Form.Label>Nome</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="nome"
+                                        value={values.nome}
+                                        onChange={handleChange('nome')}
+                                        isInvalid={errors.nome}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.nome}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="tipo_documento">
+                                    <Form.Label>Tipo do Documento</Form.Label>
+                                    <Form.Select aria-label="Default select example"
                                         name="tipo_documento"
                                         value={values.tipo_documento}
                                         onChange={handleChange('tipo_documento')}
@@ -96,60 +106,72 @@ export default function Page({params}) {
                                         <option value={'CNPJ'}>CNPJ</option>
                                         <option value={'PASSAPORTE'}>PASSAPORTE</option>
                                 </Form.Select>
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="documento">
-                                <Form.Label>Documento</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="documento"
-                                    value={values.documento}
-                                    onChange={handleChange('documento')}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="email">
-                                <Form.Label>E-mail</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="email"
-                                    value={values.email}
-                                    onChange={handleChange('email')}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="telefone">
-                                <Form.Label>Telefone</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="telefone"
-                                    value={values.telefone}
-                                    onChange={(value)=>{
-                                        setFieldValue("telefone", mask(value.target.value, '(99) 99999-9999'))}}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="data_nascimento">
-                                <Form.Label>Data de Nascimento</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="data_nascimento"
-                                    value={values.data_nascimento}
-                                    onChange={(value)=>{
-                                        setFieldValue('data_nascimento', mask(value.target.value, '99/99/9999'))
-                                    }}
-                                />
-                            </Form.Group>
-                            <div className="text-center">
-                                <Button onClick={handleSubmit} variant="success">
-                                    <FaCheck /> Salvar
-                                </Button>
-                                <Link
-                                    href="/passageiros"
-                                    className="btn btn-danger ms-2"
-                                >
-                                    <MdOutlineArrowBack /> Voltar
-                                </Link>
-                            </div>
-                        </Form>
-                    )
-                }}
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.tipo_documento}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="documento">
+                                    <Form.Label>Documento</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="documento"
+                                        value={values.documento}
+                                        onChange={handleChange('documento')}
+                                        isInvalid={errors.documento}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.documento}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="email">
+                                    <Form.Label>E-mail</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="email"
+                                        value={values.email}
+                                        onChange={handleChange('email')}
+                                        isInvalid={errors.email}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.email}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="telefone">
+                                    <Form.Label>Telefone</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="telefone"
+                                        value={values.telefone}
+                                        onChange={(value)=>{
+                                            setFieldValue("telefone", mask(value.target.value, '(99) 99999-9999'))}}
+                                        isInvalid={errors.telefone}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.telefone}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="data_nascimento">
+                                    <Form.Label>Data de Nascimento</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        name="data_nascimento"
+                                        value={values.data_nascimento}
+                                        onChange={handleChange(data_nascimento)}
+                                        isInvalid={errors.data_nascimento}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.data_nascimento}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <div className="text-center">
+                                    <Button onClick={handleSubmit} variant="success">
+                                        <FaCheck/>
+                                        Salvar
+                                    </Button>
+                                    <Link href="/passageiros" className="btn btn-danger ms-2">
+                                        <MdOutlineArrowBack/>
+                                        Voltar
+                                    </Link>
+                                </div>
+                            </Form>
+                        )
+                    }}
             </Formik>
         </Pagina>
     )

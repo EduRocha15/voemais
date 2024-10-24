@@ -16,8 +16,7 @@ const PassageiroValidator = Yup
             .string()
             .required('Insira o número do documento.'),
 
-        email: Yup
-            .string()
+        email: Yup.string()
             .email('Insira um emal válido.')
             .required('Insira um email.'),
 
